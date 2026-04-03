@@ -5,7 +5,7 @@ import * as bcrypt from 'bcryptjs';
 // Load environment variables
 dotenv.config({ path: '.env' });
 
-const MONGODB_URI = process.env.MONGODB_CONNECTION_URL || 'mongodb://localhost:27017/srs';
+const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_CONNECTION_URL || 'mongodb://localhost:27017/srs';
 const PARENT_EMAIL = (process.env.PARENT_EMAIL || 'parent@rms.local').toLowerCase();
 const PARENT_PASSWORD = process.env.PARENT_PASSWORD || 'Parent123!';
 const PARENT_FIRST_NAME = process.env.PARENT_FIRST_NAME || 'Jane';
