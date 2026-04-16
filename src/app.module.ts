@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { resolveSrv } from 'node:dns/promises';
 import { StudentModule } from './student/student.module';
 import { GuardianModule } from './guardian/guardian.module';
 import { TeacherModule } from './teacher/teacher.module';
@@ -49,14 +50,33 @@ import { ReportModule } from './report/report.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         // Default to local MongoDB if not specified
-        const mongoUri = configService.get<string>('MONGODB_CONNECTION_URL') || 'mongodb://localhost:27017/srs';
+        const configuredUri = configService.get<string>('MONGODB_CONNECTION_URL') || 'mongodb://localhost:27017/srs';
+        let mongoUri = configuredUri;
+
+        // Work around environments where Atlas TXT lookup fails (queryTxt ETIMEOUT)
+        if (configuredUri.startsWith('mongodb+srv://')) {
+          try {
+            const parsed = new URL(configuredUri);
+            const srvHost = `_mongodb._tcp.${parsed.hostname}`;
+            const records = await resolveSrv(srvHost);
+
+            if (records.length > 0) {
+              const hosts = records.map((record) => `${record.name}:${record.port}`).join(',');
+              const dbName = parsed.pathname?.replace(/^\//, '') || 'admin';
+              const encodedUser = encodeURIComponent(parsed.username || '');
+              const encodedPass = encodeURIComponent(parsed.password || '');
+
+              mongoUri = `mongodb://${encodedUser}:${encodedPass}@${hosts}/${dbName}?tls=true&authSource=admin&retryWrites=true&w=majority`;
+            }
+          } catch (error) {
+            console.warn('Failed to resolve Atlas SRV records, using configured URI directly.');
+          }
+        }
         
         console.log(`📦 Connecting to MongoDB: ${mongoUri.replace(/\/\/.*@/, '//***:***@')}`); // Hide credentials in logs
         
         return {
           uri: mongoUri,
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
           maxPoolSize: 10,
           serverSelectionTimeoutMS: 5000, // Reduced for local - faster fail if not running
           socketTimeoutMS: 45000,
