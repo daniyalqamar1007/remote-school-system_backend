@@ -144,6 +144,7 @@ async getReportCards(@Param('id') studentId: string) {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
     @Query('className') className?: string,
+    @Query('schoolId') schoolId?: string,
   ) {
     return this.studentService.findAll(
       Number(page),
@@ -152,6 +153,7 @@ async getReportCards(@Param('id') studentId: string) {
       startDate,
       endDate,
       className,
+      schoolId,
     );
   }
 

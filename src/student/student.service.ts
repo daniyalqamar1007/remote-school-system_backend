@@ -337,6 +337,7 @@ export class StudentService {
     startDate?: string,
     endDate?: string,
     className?: string,
+    schoolId?: string,
   ) {
     const skip = (page - 1) * limit;
 
@@ -349,6 +350,10 @@ export class StudentService {
 
     if (className) {
       filter.class = className; // Fixed class filtering
+    }
+
+    if (schoolId && Types.ObjectId.isValid(schoolId)) {
+      filter.schoolId = new Types.ObjectId(schoolId);
     }
 
     if (startDate || endDate) {

@@ -35,6 +35,7 @@ import { IEPModule } from './iep/iep.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { CommunicationModule } from './communication/communication.module';
 import { ReportModule } from './report/report.module';
+import { FeeModule } from './fee/fee.module';
 
 
 @Module({
@@ -122,7 +123,8 @@ import { ReportModule } from './report/report.module';
     IEPModule,
     CalendarModule,
     CommunicationModule,
-    ReportModule
+    ReportModule,
+    FeeModule
   ],
   controllers: [AppController],
   providers: [AppService],
