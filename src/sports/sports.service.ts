@@ -595,111 +595,10 @@ export class SportsService {
         }
       }
 
-      // Medical Integration: Check health record and sports clearance
-      // REQUIREMENT: Student must have a health record AND valid clearance to be assigned to sports
-      let medicalClearanceStatus = null;
-      let healthWarnings = [];
-      let healthRecord = null;
-
-      try {
-        healthRecord = await this.nurseService.getHealthRecord(student._id || student.userId || studentId, academicYear);
-
-        // If no health record found, reject assignment
-        if (!healthRecord) {
-          throw new BadRequestException(
-            'Student does not have a health record. Please create a health record in the nurse module before assigning to sports.'
-          );
-        }
-
-        // Check for active sports clearances
-        const sportsCleanances = healthRecord.activityClearances?.filter(clearance =>
-          clearance.activityType === 'sports' &&
-          clearance.cleared === true &&
-          new Date(clearance.expiryDate) > new Date()
-        ) || [];
-
-        // Check for current physical exam clearances
-        const validPhysicalExams = healthRecord.physicalExams?.filter(exam =>
-          exam.cleared === true &&
-          exam.examType === 'sports' &&
-          new Date(exam.expiryDate) > new Date()
-        ) || [];
-
-        // Health Warnings: Show active health alerts from nurse module
-        const activeAlerts = healthRecord.healthAlerts?.filter(alert =>
-          alert.isActive === true &&
-          (!alert.expiryDate || new Date(alert.expiryDate) > new Date())
-        ) || [];
-
-        // Add health alerts as warnings
-        activeAlerts.forEach(alert => {
-          if (alert.title) {
-            healthWarnings.push(alert.title);
-          } else if (alert.description) {
-            healthWarnings.push(alert.description);
-          } else {
-            healthWarnings.push(`${alert.type} alert (${alert.severity} severity)`);
-          }
-        });
-
-        // CRITICAL: Check health status - student must be healthy to be assigned
-        // Calculate health status (same logic as eligibility check)
-        const highPriorityAlerts = activeAlerts.filter(alert =>
-          alert.severity === 'high' || alert.severity === 'critical'
-        );
-
-        let healthStatus = 'Healthy';
-        let isHealthy = true;
-
-        if (highPriorityAlerts.length > 0) {
-          healthStatus = 'High Risk';
-          isHealthy = false;
-        } else if (activeAlerts.length > 0) {
-          healthStatus = 'Has Alerts';
-          isHealthy = false;
-        } else {
-          const activeMeds = healthRecord.medicationLog?.filter(med => med.isActive) || [];
-          if (activeMeds.length > 0) {
-            healthStatus = 'On Medication';
-            isHealthy = true; // Still eligible if on medication but no alerts
-          } else {
-            healthStatus = 'Healthy';
-            isHealthy = true;
-          }
-        }
-
-        // REJECT assignment if student is not healthy
-        if (!isHealthy) {
-          throw new BadRequestException(
-            `Student cannot be assigned to sports. Health status: ${healthStatus}. Student must be healthy to participate in sports. Please resolve health issues first.`
-          );
-        }
-
-        // Determine medical clearance status
-        // NOTE: If health status is "Healthy", allow assignment even without medical clearance
-        // Medical clearance is preferred but not required if student is healthy
-        if (sportsCleanances.length > 0 || validPhysicalExams.length > 0) {
-          medicalClearanceStatus = 'cleared';
-        } else if (isHealthy && healthStatus === 'Healthy') {
-          // Allow assignment if student is healthy, even without medical clearance
-          medicalClearanceStatus = 'pending';
-        } else {
-          // REJECT assignment if student does not have valid clearance AND is not healthy
-          throw new BadRequestException(
-            'Student cannot be assigned to sports without valid medical clearance. ' +
-            'Please ensure the student has a valid sports physical exam or activity clearance in the nurse module before assigning to sports.'
-          );
-        }
-      } catch (error) {
-        // Re-throw BadRequestException (for clearance or health issues)
-        if (error instanceof BadRequestException) {
-          throw error;
-        }
-        // For other errors (e.g., health record not found), reject assignment
-        throw new BadRequestException(
-          'Student does not have a health record. Please create a health record in the nurse module before assigning to sports.'
-        );
-      }
+      // Health record is no longer required for sports assignment.
+      // Keep these fields populated for backward compatibility in response/reporting.
+      const medicalClearanceStatus = 'pending';
+      const healthWarnings: string[] = [];
 
       const assignment = new this.studentSportsModel({
         ...assignmentData,
@@ -715,24 +614,7 @@ export class SportsService {
 
       const savedAssignment = await assignment.save();
 
-      const healthRecordStudentId = String((student as any)._id ?? (student as any).userId ?? studentId);
-      const validPhysicals = healthRecord?.physicalExams?.filter(exam =>
-        exam.cleared === true && exam.examType === 'sports' && new Date(exam.expiryDate) > new Date()
-      ) || [];
-      const sportsClearancesForProgram = healthRecord?.activityClearances?.filter(c =>
-        c.activityType === 'sports' && c.cleared === true && new Date(c.expiryDate) > new Date()
-      ) || [];
-      const firstPhysical = validPhysicals[0];
-      const firstClearance = sportsClearancesForProgram[0];
-      await this.nurseService.ensureActivityClearanceForSports(healthRecordStudentId, sportsProgram.name, {
-        cleared: medicalClearanceStatus === 'cleared',
-        clearanceDate: firstClearance?.clearanceDate || (firstPhysical?.clearanceDate ? new Date(firstPhysical.clearanceDate) : undefined),
-        expiryDate: firstClearance?.expiryDate ? new Date(firstClearance.expiryDate) : (firstPhysical?.expiryDate ? new Date(firstPhysical.expiryDate) : undefined),
-      });
-
-      const medicalStatusText = medicalClearanceStatus === 'cleared' ? 'with valid medical clearance' :
-        medicalClearanceStatus === 'pending' ? 'with pending medical clearance' :
-          'without medical record';
+      const medicalStatusText = 'without mandatory health record check';
 
       await this.activityService.create({
         title: `Student assigned to sports program`,
