@@ -15,4 +15,8 @@ export class RecordFeePaymentDto {
   @IsOptional()
   @IsString()
   note?: string;
+
+  @IsOptional()
+  @IsString()
+  externalPaymentId?: string;
 }

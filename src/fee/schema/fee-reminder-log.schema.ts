@@ -22,7 +22,20 @@ export class FeeReminderLog {
 
   @Prop({ default: false })
   parentAlertCreated: boolean;
+
+  @Prop({ trim: true })
+  runType?: string;
+
+  @Prop({ trim: true })
+  triggeredBy?: string;
+
+  @Prop({ trim: true, index: true })
+  idempotencyKey?: string;
+
+  @Prop({ type: Date, default: Date.now })
+  runAt?: Date;
 }
 
 export const FeeReminderLogSchema = SchemaFactory.createForClass(FeeReminderLog);
 FeeReminderLogSchema.index({ installmentId: 1, reminderDateKey: 1 }, { unique: true });
+FeeReminderLogSchema.index({ schoolId: 1, idempotencyKey: 1 }, { sparse: true });

@@ -22,7 +22,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed:parent": "ts-node src/scripts/seed-parent.ts",
-    "db:drop-email-unique": "ts-node src/scripts/drop-email-unique-index.ts"
+    "db:drop-email-unique": "ts-node src/scripts/drop-email-unique-index.ts",
+    "db:backfill-fee-fields": "ts-node src/scripts/backfill-fee-fields.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",

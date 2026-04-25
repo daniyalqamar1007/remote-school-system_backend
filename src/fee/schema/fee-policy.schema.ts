@@ -23,6 +23,9 @@ export class FeePolicy {
   @Prop({ required: true, enum: ['monthly', 'yearly'], default: 'monthly' })
   installmentFrequency: string;
 
+  @Prop({ required: true, min: 1, max: 12, default: 1 })
+  academicStartMonth: number;
+
   @Prop({ required: true, min: 1, max: 31, default: 5 })
   dueDay: number;
 
@@ -47,6 +50,12 @@ export class FeePolicy {
   @Prop({ default: true, index: true })
   isActive: boolean;
 
+  @Prop({ default: false, index: true })
+  isDeleted: boolean;
+
+  @Prop({ type: Date })
+  deletedAt?: Date;
+
   @Prop({ type: Types.ObjectId, ref: 'User' })
   createdBy?: Types.ObjectId;
 
@@ -55,4 +64,4 @@ export class FeePolicy {
 }
 
 export const FeePolicySchema = SchemaFactory.createForClass(FeePolicy);
-FeePolicySchema.index({ schoolId: 1, academicYear: 1, className: 1, isActive: 1 });
+FeePolicySchema.index({ schoolId: 1, academicYear: 1, className: 1, isActive: 1, isDeleted: 1 });

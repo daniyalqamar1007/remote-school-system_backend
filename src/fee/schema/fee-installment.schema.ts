@@ -57,3 +57,4 @@ export class FeeInstallment {
 export const FeeInstallmentSchema = SchemaFactory.createForClass(FeeInstallment);
 FeeInstallmentSchema.index({ schoolId: 1, studentId: 1, academicYear: 1, installmentNo: 1 }, { unique: true });
 FeeInstallmentSchema.index({ schoolId: 1, dueDate: 1, status: 1 });
+FeeInstallmentSchema.index({ schoolId: 1, academicYear: 1, status: 1, dueDate: 1 });

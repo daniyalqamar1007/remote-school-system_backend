@@ -58,7 +58,10 @@ export class AuthService {
         ]
       }).exec();
 
-      console.log('🔑 User found:', user);
+      console.log('🔑 Login attempt user lookup:', {
+        found: Boolean(user),
+        email: email.toLowerCase(),
+      });
 
       if (!user) {
         return null;
@@ -75,7 +78,7 @@ export class AuthService {
       // Compare password - handle both schema method and direct bcrypt comparison
       let isPasswordValid = false;
 
-      console.log('🔑 Is locked:', isLocked);
+      console.log('🔑 Account lock status checked:', { isLocked });
 
       try {
         if (typeof user.comparePassword === 'function') {
@@ -89,7 +92,7 @@ export class AuthService {
         isPasswordValid = await bcrypt.compare(password, user.password);
       }
 
-      console.log('🔑 Is password valid:', isPasswordValid);
+      console.log('🔑 Password verification complete:', { isPasswordValid });
 
       if (!isPasswordValid) {
         // Increment failed login attempts if method exists
@@ -114,7 +117,7 @@ export class AuthService {
 
       return user;
     } catch (error) {
-      console.log('🔑 Error in validateUser:', error);
+      console.log('🔑 Error in validateUser:', error?.message || 'Unknown authentication error');
       if (error instanceof UnauthorizedException) throw error;
       return null;
     }
@@ -127,7 +130,7 @@ export class AuthService {
       // Generate a temporary MFA code (6 digits)
       const mfaCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-      console.log('🔑 Generated MFA code for user:', user.email, 'Code:', mfaCode);
+      console.log('🔑 Generated MFA code for user:', user.email);
 
       // Store the MFA code temporarily (expires in 10 minutes)
       const updateResult = await this.userModel.updateOne(

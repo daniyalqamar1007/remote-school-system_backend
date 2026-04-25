@@ -1,8 +1,8 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class CreateFeePolicyDto {
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   schoolId?: string;
 
   @IsString()
@@ -23,6 +23,12 @@ export class CreateFeePolicyDto {
 
   @IsEnum(['monthly', 'yearly'])
   installmentFrequency: 'monthly' | 'yearly';
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(12)
+  academicStartMonth?: number;
 
   @IsNumber()
   @Min(1)

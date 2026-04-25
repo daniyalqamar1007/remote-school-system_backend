@@ -29,6 +29,10 @@ export class StudentService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
+  private escapeRegex(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   calculateGraduationDate(enrollDate: string): string {
     const date = new Date(enrollDate);
     date.setFullYear(date.getFullYear() + 5);
@@ -334,6 +338,7 @@ export class StudentService {
     page = 1,
     limit = 10,
     studentId?: string,
+    search?: string,
     startDate?: string,
     endDate?: string,
     className?: string,
@@ -346,6 +351,15 @@ export class StudentService {
 
     if (studentId) {
       filter.studentId = studentId; // Use direct match if studentId is unique
+    }
+
+    if (search?.trim()) {
+      const searchValue = this.escapeRegex(search.trim());
+      filter.$or = [
+        { firstName: { $regex: searchValue, $options: 'i' } },
+        { lastName: { $regex: searchValue, $options: 'i' } },
+        { email: { $regex: searchValue, $options: 'i' } },
+      ];
     }
 
     if (className) {

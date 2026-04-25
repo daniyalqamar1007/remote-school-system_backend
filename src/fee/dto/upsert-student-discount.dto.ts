@@ -1,15 +1,15 @@
-import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class UpsertStudentDiscountDto {
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   schoolId?: string;
 
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
   studentId: string;
 
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
   feePolicyId: string;
 

@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class GenerateInstallmentsDto {
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   schoolId?: string;
 
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   studentId?: string;
 
   @IsOptional()
@@ -16,4 +16,9 @@ export class GenerateInstallmentsDto {
   @IsString()
   @IsNotEmpty()
   academicYear: string;
+
+  @IsOptional()
+  @Min(1)
+  @Max(12)
+  academicStartMonth?: number;
 }

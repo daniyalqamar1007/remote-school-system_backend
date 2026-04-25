@@ -12,6 +12,7 @@ import { User, UserSchema } from '../auth/schemas/user.schema';
 import { Parent, ParentSchema } from '../parent/schema/parent.schema';
 import { Alert, AlertSchema } from '../alert/schema/alert.schema';
 import { EmailModule } from '../email/email.module';
+import { MockPaymentProvider } from './mock-payment.provider';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { EmailModule } from '../email/email.module';
     EmailModule,
   ],
   controllers: [FeeController],
-  providers: [FeeService],
+  providers: [FeeService, MockPaymentProvider],
   exports: [FeeService],
 })
 export class FeeModule {}
