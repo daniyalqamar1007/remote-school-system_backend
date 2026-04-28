@@ -5,9 +5,9 @@ import * as bcrypt from 'bcryptjs';
 // Load environment variables
 dotenv.config({ path: '.env' });
 
-const MONGODB_URI = process.env.MONGODB_CONNECTION_URL || 'mongodb://localhost:27017/srs';
-const SUPER_ADMIN_EMAIL = 'admin@srs.com';
-const SUPER_ADMIN_PASSWORD = 'srs78654';
+const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_CONNECTION_URL || 'mongodb://localhost:27017/srs';
+const SUPER_ADMIN_EMAIL = 'superadmin@rms.local';
+const SUPER_ADMIN_PASSWORD = 'Superadmin123!';
 
 async function createSuperAdmin() {
   const client = new MongoClient(MONGODB_URI);

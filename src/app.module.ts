@@ -49,7 +49,10 @@ import { ReportModule } from './report/report.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         // Default to local MongoDB if not specified
-        const mongoUri = configService.get<string>('MONGODB_CONNECTION_URL') || 'mongodb://localhost:27017/srs';
+        const mongoUri =
+          configService.get<string>('MONGO_URI') ||
+          configService.get<string>('MONGODB_CONNECTION_URL') ||
+          'mongodb://localhost:27017/srs';
         
         console.log(`📦 Connecting to MongoDB: ${mongoUri.replace(/\/\/.*@/, '//***:***@')}`); // Hide credentials in logs
         
