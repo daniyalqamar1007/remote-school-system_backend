@@ -1,5 +1,8 @@
-// Quick test script to populate default system settings
+require('dotenv').config();
 const mongoose = require('mongoose');
+
+const DEFAULT_MONGO_URI =
+  'mongodb://localhost:27017/srs';
 
 const SystemConfigSchema = new mongoose.Schema({
   key: { type: String, required: true, unique: true },
@@ -17,7 +20,9 @@ const SystemConfig = mongoose.model('SystemConfig', SystemConfigSchema);
 
 async function populateSettings() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/pludo-school');
+    await mongoose.connect(
+      process.env.MONGO_URI || process.env.MONGODB_CONNECTION_URL || DEFAULT_MONGO_URI,
+    );
 
     console.log('Connected to MongoDB');
 

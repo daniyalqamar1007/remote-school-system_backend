@@ -3,7 +3,10 @@ require('dotenv').config();
 
 async function updateUserNames() {
   try {
-    const mongoUri = process.env.MONGODB_CONNECTION_URL || process.env.MONGO_URI;
+    const mongoUri =
+      process.env.MONGO_URI ||
+      process.env.MONGODB_CONNECTION_URL ||
+      'mongodb://localhost:27017/srs';
     console.log('🔄 Connecting to MongoDB...');
     await mongoose.connect(mongoUri);
     console.log('✅ Connected successfully');

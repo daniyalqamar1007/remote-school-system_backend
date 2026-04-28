@@ -21,11 +21,10 @@ async function addUserNames() {
   
   try {
     // Connect to MongoDB
-    const mongoUri = process.env.MONGODB_CONNECTION_URL || process.env.MONGO_URI;
-    
-    if (!mongoUri) {
-      throw new Error('MongoDB connection string not found in environment variables');
-    }
+    const mongoUri =
+      process.env.MONGO_URI ||
+      process.env.MONGODB_CONNECTION_URL ||
+      'mongodb://localhost:27017/srs';
     
     console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri);

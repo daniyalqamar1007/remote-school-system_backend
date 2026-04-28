@@ -2,8 +2,11 @@ import { MongoClient, ObjectId } from "mongodb";
 import * as bcrypt from "bcrypt";
 
 // Load URI and seed password from environment
-const uri = process.env.MONGO_URI || "mongodb+srv://daniyalqamar1007:9myDVVPAajTYvJi3@srscluster.hiluyui.mongodb.net/srs";
-const seedPassword = process.env.SEED_PASSWORD || "123";
+const uri =
+  process.env.MONGO_URI ||
+  process.env.MONGODB_CONNECTION_URL ||
+  "mongodb://localhost:27017/srs";
+const seedPassword = process.env.SEED_PASSWORD || "Superadmin123!";
 const client = new MongoClient(uri);
 
 async function createSuperAdmin() {

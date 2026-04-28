@@ -2,7 +2,10 @@ import { MongoClient, ObjectId } from 'mongodb';
 import * as bcrypt from 'bcrypt';
 
 async function createStudentsForParent() {
-  const uri = 'mongodb+srv://daniyalqamar1007:9myDVVPAajTYvJi3@srscluster.hiluyui.mongodb.net/srs';
+  const uri =
+    process.env.MONGO_URI ||
+    process.env.MONGODB_CONNECTION_URL ||
+    'mongodb://localhost:27017/srs';
   const client = new MongoClient(uri);
 
   try {

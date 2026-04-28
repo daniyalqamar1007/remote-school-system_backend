@@ -5,7 +5,10 @@ import * as bcrypt from 'bcryptjs';
 // Load environment variables
 dotenv.config({ path: '.env' });
 
-const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_CONNECTION_URL || 'mongodb://localhost:27017/srs';
+const MONGODB_URI =
+  process.env.MONGO_URI ||
+  process.env.MONGODB_CONNECTION_URL ||
+  'mongodb://localhost:27017/srs';
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@rms.local').toLowerCase();
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin123!';
 const ADMIN_FIRST_NAME = process.env.ADMIN_FIRST_NAME || 'School';

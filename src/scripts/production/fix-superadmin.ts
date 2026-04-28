@@ -20,11 +20,10 @@ async function fixSuperAdmin() {
   
   try {
     // Connect to MongoDB
-    const mongoUri = process.env.MONGODB_CONNECTION_URL || process.env.MONGO_URI;
-    
-    if (!mongoUri) {
-      throw new Error('MongoDB connection string not found in environment variables');
-    }
+    const mongoUri =
+      process.env.MONGO_URI ||
+      process.env.MONGODB_CONNECTION_URL ||
+      'mongodb://localhost:27017/srs';
     
     console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri);
@@ -49,7 +48,7 @@ async function fixSuperAdmin() {
     });
 
     // Hash the correct password
-    const correctPassword = 'SuperAdmin123!';
+    const correctPassword = 'Superadmin123!';
     const hashedPassword = await bcrypt.hash(correctPassword, 12);
 
     // Update the user
@@ -66,7 +65,7 @@ async function fixSuperAdmin() {
     console.log('✅ Superadmin user updated successfully!');
     console.log('Updated credentials:');
     console.log('Email: superadmin@srs.com');
-    console.log('Password: SuperAdmin123!');
+    console.log('Password: Superadmin123!');
     console.log('Role: SUPER_ADMIN');
     console.log('Status: ACTIVE');
 

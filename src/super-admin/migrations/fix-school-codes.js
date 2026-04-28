@@ -60,13 +60,15 @@ async function migrateSchoolCodes() {
   ].filter(Boolean).map(s => s.trim());
 
   const candidates = [];
-  // Prefer environment-provided connection strings (Atlas)
+  const defaultAtlasUri =
+    'mongodb://localhost:27017/srs';
   if (envCandidates.length > 0) {
     console.log('🔎 Found MongoDB URI in environment variables. Will try those first.');
     envCandidates.forEach((u, i) => console.log(`  ${i + 1}. ${u.startsWith('mongodb+srv') ? 'mongodb+srv://<REDACTED>' : u}`));
     candidates.push(...envCandidates);
+  } else {
+    candidates.push(defaultAtlasUri);
   }
-  // Try explicit IPv4 first to avoid IPv6 resolution issues
   candidates.push('mongodb://127.0.0.1:27017/srs');
   candidates.push('mongodb://localhost:27017/srs');
 

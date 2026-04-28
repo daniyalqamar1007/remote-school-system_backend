@@ -10,7 +10,10 @@ const UserSchema = new mongoose.Schema({
 
 async function verifyUserNames() {
   try {
-    const mongoUri = process.env.MONGODB_CONNECTION_URL || process.env.MONGO_URI;
+    const mongoUri =
+      process.env.MONGO_URI ||
+      process.env.MONGODB_CONNECTION_URL ||
+      'mongodb://localhost:27017/srs';
     
     console.log('🔍 Connecting to MongoDB to verify user names...');
     await mongoose.connect(mongoUri);

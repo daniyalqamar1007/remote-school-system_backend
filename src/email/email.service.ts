@@ -259,7 +259,7 @@ export class EmailService {
     }
 
     try {
-      const loginUrl = `${process.env.FRONTEND_URL || 'http://ec2-3-17-131-17.us-east-2.compute.amazonaws.com:3000'}/login`;
+      const loginUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`;
       
       const mailOptions = {
         from: process.env.SMTP_FROM || 'SRS System <noreply@srs.edu>',
@@ -287,7 +287,7 @@ export class EmailService {
       console.log(`📧 Email: ${userEmail}`);
       console.log(`🔑 Temporary Password: ${temporaryPassword}`);
       console.log(`👔 Role: ${role}`);
-      console.log(`🔗 Login URL: ${process.env.FRONTEND_URL || 'http://ec2-3-17-131-17.us-east-2.compute.amazonaws.com:3000'}/login`);
+      console.log(`🔗 Login URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`);
       console.log('⚠️  User must change password on first login');
       console.log('='.repeat(60) + '\n');
       
@@ -453,7 +453,7 @@ This is an automated message. Please do not reply.
     }
 
     try {
-      const resetUrl = `${process.env.FRONTEND_URL || 'http://ec2-3-17-131-17.us-east-2.compute.amazonaws.com:3000'}/reset-password?token=${resetToken}`;
+      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
       
       const mailOptions = {
         from: process.env.SMTP_FROM || 'SRS System <noreply@srs.edu>',

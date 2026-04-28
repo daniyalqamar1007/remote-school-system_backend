@@ -2,11 +2,9 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 
 async function run() {
-  const uri = (process.env.MONGO_URI || process.env.MONGODB_CONNECTION_URL) as string;
-  if (!uri) {
-    console.error('MONGO_URI or MONGODB_CONNECTION_URL is not set in .env');
-    process.exit(1);
-  }
+  const uri = (process.env.MONGO_URI ||
+    process.env.MONGODB_CONNECTION_URL ||
+    'mongodb://localhost:27017/srs') as string;
 
   await mongoose.connect(uri, {
     maxPoolSize: 2,

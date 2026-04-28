@@ -1,7 +1,10 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
 async function updateParentWithChildren() {
-  const uri = 'mongodb+srv://123:123@e-store.uf5qztz.mongodb.net/srs';
+  const uri =
+    process.env.MONGO_URI ||
+    process.env.MONGODB_CONNECTION_URL ||
+    'mongodb://localhost:27017/srs';
   const client = new MongoClient(uri);
 
   try {

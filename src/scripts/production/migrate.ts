@@ -47,11 +47,10 @@ async function migrate() {
   
   try {
     // Connect to MongoDB using environment variable
-    const mongoUri = process.env.MONGODB_CONNECTION_URL || process.env.MONGO_URI;
-    
-    if (!mongoUri) {
-      throw new Error('MongoDB connection string not found in environment variables');
-    }
+    const mongoUri =
+      process.env.MONGO_URI ||
+      process.env.MONGODB_CONNECTION_URL ||
+      'mongodb://localhost:27017/srs';
     
     console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri, {
@@ -106,7 +105,7 @@ async function migrate() {
     if (!existingSuperAdmin) {
       console.log('Creating Super Admin user...');
       try {
-        const hashedPassword = await bcrypt.hash('SuperAdmin123!', 12);
+        const hashedPassword = await bcrypt.hash('Superadmin123!', 12);
         
         await User.create({
           email: 'superadmin@srs.com',
@@ -227,7 +226,7 @@ async function migrate() {
 
     console.log('\n=== Migration Complete ===');
     console.log('Sample login credentials:');
-    console.log('Super Admin: superadmin@srs.com / SuperAdmin123!');
+    console.log('Super Admin: superadmin@srs.com / Superadmin123!');
     console.log('Admin: admin@defaultschool.edu / Admin123!');
     console.log('Teacher: teacher@defaultschool.edu / Teacher123!');
     console.log('Student: student@defaultschool.edu / Student123!');

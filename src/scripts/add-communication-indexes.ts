@@ -1,7 +1,11 @@
 import { MongoClient } from 'mongodb';
 
 async function addCommunicationIndexes() {
-  const client = new MongoClient(process.env.MONGO_URI || process.env.MONGODB_CONNECTION_URL || 'mongodb://localhost:27017/srs');
+  const client = new MongoClient(
+    process.env.MONGO_URI ||
+      process.env.MONGODB_CONNECTION_URL ||
+      'mongodb://localhost:27017/srs',
+  );
   
   try {
     await client.connect();

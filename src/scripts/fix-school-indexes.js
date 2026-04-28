@@ -1,7 +1,15 @@
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const { MongoClient } = require('mongodb');
 
+const DEFAULT_MONGO_URI =
+  'mongodb://localhost:27017/srs';
+
 async function fixSchoolIndexes() {
-  const client = new MongoClient('mongodb://localhost:27017');
+  const uri =
+    process.env.MONGO_URI ||
+    process.env.MONGODB_CONNECTION_URL ||
+    DEFAULT_MONGO_URI;
+  const client = new MongoClient(uri);
   
   try {
     await client.connect();
